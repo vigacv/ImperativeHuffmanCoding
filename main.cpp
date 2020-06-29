@@ -150,8 +150,47 @@ void Agregar(ArbolBB* tree, Nodo* newItem) {
     }
 };
 
-Nodo* generarArbolHuffman(Nodo* listaFrecuencias){
-    return NULL;
+vector<ArbolBB*> ListaArboles(vector<Nodo*> v){
+    vector<ArbolBB*> listaA;
+    for(int i=0;i<v.size();i++){
+        ArbolBB* newArbol = CrearArbol(v[i], NULL, NULL);
+        listaA.push_back(newArbol);
+    }
+    return listaA;
+};
+
+void MostrarListaArboles(vector<ArbolBB*> v){
+    for(int i=0;i<v.size();i++){
+        cout<<v[i]->raiz->frecuencia<<":"<<v[i]->raiz->valor<<endl;
+    }
+};
+
+vector<ArbolBB*> OrdenarListaArbol(vector<ArbolBB*> v){
+    for(int i=0;i<v.size()-1;i++){
+        for(int j=i+1;j<v.size();j++){
+            if(v[i]->raiz->frecuencia > v[j]->raiz->frecuencia){
+                ArbolBB* temp=v[i];
+                v[i]=v[j];
+                v[j]=temp;
+            }
+        }
+    }
+    return v;
+};
+
+ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
+    if(v.empty()){
+        return NULL;
+    }else{
+        while(v.size()!=1){
+            v=OrdenarListaArbol(v);
+            int suma= (v[0]->raiz->frecuencia)+(v[1]->raiz->frecuencia);
+            ArbolBB* newArbol=CrearArbol(CrearNodo(suma, 0), v[0], v[1]);
+            v.erase(v.begin(),v.begin()+2);
+            v.push_back(newArbol);
+        }
+        return v[0];
+    }
 };
 
 string codificar(int x){
@@ -170,15 +209,11 @@ int main(){
     vector<Nodo*> lF;
     lF = ListaNodos(val);
     cout<<endl;
-    cout<<"Lista Frecuencia y Valor"<<endl;MostrarListaNodos(lF);
-    ArbolBB* pArbol = new ArbolBB();
-    Nodo* n1=CrearNodo(3,1);
-    Nodo* n2=CrearNodo(4,2);
-    Nodo* n3=CrearNodo(2,3);
-    Nodo* n4=CrearNodo(1,4);
-    Agregar(pArbol, n1);
-    Agregar(pArbol, n2);
-    Agregar(pArbol, n3);
-    Agregar(pArbol, n4);
-    cout<<"\nArbol en preOrden: ";preOrden(pArbol);cout<<endl;
+    vector<ArbolBB*> lA;
+    lA = ListaArboles(lF);
+    ArbolBB* ArbolH=GenerarArbolHuffman(lA);
+    MostrarListaArboles(lA);
+    cout<<"---------"<<endl;
+    cout<<ArbolH->r    //cout<<"\nArbol en preOrden: ";preOrden(pArbol);cout<<endl;aiz->frecuencia<<":"<<ArbolH->raiz->valor;
+
 }
