@@ -6,8 +6,6 @@ using namespace std;
 struct Raiz{
     int frecuencia;
     int valor;
-    Raiz* nodoLeft;
-    Raiz* nodoRight;
 };
 
 struct ArbolBB{
@@ -16,12 +14,11 @@ struct ArbolBB{
     ArbolBB* subArbolDer;
 };
 
-void crearNodo(int f, int v){
-    Raiz* newNodo = new Raiz();
-    newNodo->frecuencia=f;
-    newNodo->valor=v;
-    newNodo->nodoLeft=NULL;
-    newNodo->nodoRight=NULL;
+Raiz* CrearRaiz(int f, int v){
+    Raiz* newRaiz = new Raiz();
+    newRaiz->frecuencia=f;
+    newRaiz->valor=v;
+    return newRaiz;
 };
 //LISTAS
 void MostrarLista(vector<int> v){
@@ -44,7 +41,7 @@ vector<int> OrdenarLista(vector<int> v){
     return v;
 };
 
-vector<int> ListaFrecuencia(vector<int> v){
+vector<int> ListaFrecuencias(vector<int> v){
     vector<int> newLista;
     OrdenarLista(v);
     int cont=0;
@@ -63,6 +60,46 @@ vector<int> ListaFrecuencia(vector<int> v){
     newLista.push_back(cant);
     return newLista;
 };
+
+vector<int> ListaValores(vector<int> v){
+    vector<int> newLista;
+    OrdenarLista(v);
+    int cont=0;
+    int valor=v[cont];
+    while(cont!=v.size()){
+        if(v[cont]==valor){
+            cont++;
+        }else{
+            newLista.push_back(valor);
+            valor=v[cont];
+        }
+    }
+    newLista.push_back(valor);
+    return newLista;
+};
+
+
+vector<Raiz*> ListaNodos(vector<int> v){
+    vector<int> listaF;
+    vector<int> listaV;
+    listaF=ListaFrecuencias(v);
+    listaV=ListaValores(v);
+    cout<<"ListaF: ";MostrarLista(listaF);cout<<endl;
+    cout<<"ListaV: ";MostrarLista(listaV);cout<<endl;
+    vector<Raiz*> listaN;
+    for(int i=0;i<listaV.size();i++){
+        Raiz* newRaiz = CrearRaiz(listaF[i], listaV[i]);
+        listaN.push_back(newRaiz);
+    }
+    return listaN;
+};
+
+void MostrarListaNodos(vector<Raiz*> v){
+    for(int i=0;i<v.size();i++){
+        cout<<v[i]->frecuencia<<":"<<v[i]->valor<<endl;
+    }
+};
+
 //ARBOL
 bool esVacio(ArbolBB* tree){
     if(tree->item==NULL){
@@ -96,11 +133,12 @@ int decodificar(string x){
 };
 
 int main(){
-    vector<int> val= {1,2,2,1,3,4,2,1,2,3};
+    vector<int> val= {1,2,2,1,9,5,5,3,4,7,2,1,2,3};
     val = OrdenarLista(val);
     MostrarLista(val);
     cout<<endl;
-    vector<int> fre;
-    fre=ListaFrecuencia(val);
-    MostrarLista(fre);
+    vector<Raiz*> lF;
+    lF = ListaNodos(val);
+    cout<<endl;
+    cout<<"Lista Frecuencia y Valor"<<endl;MostrarListaNodos(lF);
 }
