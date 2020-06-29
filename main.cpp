@@ -42,43 +42,6 @@ vector<int> OrdenarLista(vector<int> v){
     return v;
 };
 
-vector<int> ListaFrecuencias(vector<int> v){
-    vector<int> newLista;
-    OrdenarLista(v);
-    int cont=0;
-    int cant=0;
-    int valor=v[cont];
-    while(cont!=v.size()){
-        if(v[cont]==valor){
-            cant++;
-            cont++;
-        }else{
-            newLista.push_back(cant);
-            valor=v[cont];
-            cant=0;
-        }
-    }
-    newLista.push_back(cant);
-    return newLista;
-};
-
-vector<int> ListaValores(vector<int> v){
-    vector<int> newLista;
-    OrdenarLista(v);
-    int cont=0;
-    int valor=v[cont];
-    while(cont!=v.size()){
-        if(v[cont]==valor){
-            cont++;
-        }else{
-            newLista.push_back(valor);
-            valor=v[cont];
-        }
-    }
-    newLista.push_back(valor);
-    return newLista;
-};
-
 
 Nodo* ListaNodos(vector<int> v){
     int frec = 0;
