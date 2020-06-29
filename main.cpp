@@ -1,41 +1,106 @@
 #include <iostream>
-
+#include <string>
+#include <vector>
 using namespace std;
 
-struct Nodo{
+struct Raiz{
     int frecuencia;
     int valor;
-    Nodo* sig;
+    Raiz* nodoLeft;
+    Raiz* nodoRight;
 };
 
-Nodo* listaFrecuencias = NULL; //Esta lista almacena todos los valores con su frecuencia
+struct ArbolBB{
+    Raiz* item;
+    ArbolBB* subArbolIzq;
+    ArbolBB* subArbolDer;
+};
 
-void agregarALista(Nodo* cabezaLista, int frec, int valor){
-    //Esta funcion debe agregar un nuevo nodo a la lista de frecuencias
-}
+void crearNodo(int f, int v){
+    Raiz* newNodo = new Raiz();
+    newNodo->frecuencia=f;
+    newNodo->valor=v;
+    newNodo->nodoLeft=NULL;
+    newNodo->nodoRight=NULL;
+};
+//LISTAS
+void MostrarLista(vector<int> v){
+    for(int i=0;i<v.size();i++){
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+};
 
-Nodo* contarFrecuencia(int x){
+vector<int> OrdenarLista(vector<int> v){
+    for(int i=0;i<v.size()-1;i++){
+        for(int j=i+1;j<v.size();j++){
+            if(v[i]>v[j]){
+                int temp=v[i];
+                v[i]=v[j];
+                v[j]=temp;
+            }
+        }
+    }
+    return v;
+};
+
+vector<int> ListaFrecuencia(vector<int> v){
+    vector<int> newLista;
+    OrdenarLista(v);
+    int cont=0;
+    int cant=0;
+    int valor=v[cont];
+    while(cont!=v.size()){
+        if(v[cont]==valor){
+            cant++;
+            cont++;
+        }else{
+            newLista.push_back(cant);
+            valor=v[cont];
+            cant=0;
+        }
+    }
+    newLista.push_back(cant);
+    return newLista;
+};
+//ARBOL
+bool esVacio(ArbolBB* tree){
+    if(tree->item==NULL){
+        return true;
+    }
+    return false;
+};
+
+void preOrden(ArbolBB* tree){
+    //if (esVacio(ArbolBB* tree->item)!=true){
+      //  cout<<tree->item->frecuencia<<"  ";
+        //if (subArbolIzq != null) {
+          //  preOrden(subArbolIzq);
+        //
+        //if (subArbolDer != null) {
+          //  preOrden(subArbolDer);
+        //}
+    //}
+};
+
+Raiz* generarArbolHuffman(Raiz* listaFrecuencias){
     return NULL;
-}
-
-void ordenarLista(Nodo* cabezaLista){
-
-}
-
-Nodo* generarArbolHuffman(Nodo* listaFrecuencias){
-    return NULL;
-}
+};
 
 string codificar(int x){
     return NULL;
-}
+};
 
 int decodificar(string x){
     return NULL;
-}
+};
 
-int main()
-{
-    cout << "Hello world!" << endl;
-    return 0;
+int main(){
+    vector<int> val= {1,2,2,1,3,4,2,1,2,3};
+    val = OrdenarLista(val);
+    MostrarLista(val);
+    cout<<endl;
+    vector<int> fre;
+    fre=ListaFrecuencia(val);
+    MostrarLista(fre);
 }
