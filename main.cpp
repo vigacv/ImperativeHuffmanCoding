@@ -176,21 +176,51 @@ ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
     }
 };
 
-string codificar(int x){
-    return NULL;
+
+
+bool estaEnArbol(int x, ArbolBB* arbol){
+    if(arbol == NULL){
+        return false;
+    }else{
+        if(arbol->raiz->valor == x){
+            return true;
+        }else{
+            return estaEnArbol(x,arbol->subArbolIzq) || estaEnArbol(x,arbol->subArbolDer);
+        }
+    }
+}
+
+string encontrarCod(int x, ArbolBB* pArbol, string cod){
+    if(pArbol->raiz->valor == x){
+        return cod;
+    }else{
+        if(estaEnArbol(x, pArbol->subArbolIzq)){
+            return encontrarCod(x, pArbol->subArbolIzq, (cod+="0"));
+        }else if(estaEnArbol(x, pArbol->subArbolDer)){
+            return encontrarCod(x, pArbol->subArbolDer, (cod+="1"));
+        }
+    }
+}
+
+string codificar(vector<int> x, ArbolBB* ArbolHuff){
+    string cod = "";
+    for(int i=0; i<x.size(); i++){
+        cod += encontrarCod(x[i],ArbolHuff,"");
+    }
+    return cod;
 };
 
-int decodificar(string x){
-    return 0;
+string decodificarCadena(string cod, ArbolBB* ArbolHuff){
+    return NULL;
 };
 
 int main(){
     vector<int> val= {1,2,2,1,3,4,2,1,2,3};
-    val = OrdenarLista(val);
-    MostrarLista(val);
+    vector<int> val2 = OrdenarLista(val);
+    MostrarLista(val2);
     cout<<endl;
     Nodo* lF;
-    lF = ListaNodos(val);
+    lF = ListaNodos(val2);
     cout<<endl;
     cout<<"Lista Frecuencia y Valor"<<endl;MostrarListaNodos(lF);
     cout << endl;
@@ -199,6 +229,9 @@ int main(){
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     MostrarListaArboles(lA);
     cout<<"---------"<<endl;
-    cout<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor;
+    cout<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor << endl;
+    string valCodificados = codificar(val,ArbolH);
+    cout << valCodificados << endl;
+    cout << encontrarCod(4, ArbolH, "") << endl;
     //cout<<"\nArbol en preOrden: ";preOrden(pArbol);cout<<endl;
 }
