@@ -6,6 +6,7 @@ using namespace std;
 struct Nodo{
     int frecuencia;
     int valor;
+    Nodo* sigNodo=NULL;
 };
 
 struct ArbolBB{
@@ -41,62 +42,42 @@ vector<int> OrdenarLista(vector<int> v){
     return v;
 };
 
-vector<int> ListaFrecuencias(vector<int> v){
-    vector<int> newLista;
-    OrdenarLista(v);
-    int cont=0;
-    int cant=0;
-    int valor=v[cont];
-    while(cont!=v.size()){
-        if(v[cont]==valor){
-            cant++;
-            cont++;
+Nodo* ListaNodos(vector<int> v){
+    int frec = 0;
+    int valor = v[0];
+    Nodo* nodoPrevio = NULL;
+    Nodo* primerNodo = new Nodo();
+    for(int i=0; i<v.size(); i++){
+        if(v[i]==valor){
+            frec++;
         }else{
-            newLista.push_back(cant);
-            valor=v[cont];
-            cant=0;
+            Nodo* nuevoNodo = new Nodo();
+            nuevoNodo->valor = valor;
+            nuevoNodo->frecuencia = frec;
+            valor = v[i];
+            frec = 1;
+            if(nodoPrevio != NULL){
+                nodoPrevio->sigNodo = nuevoNodo;
+            }else{
+                primerNodo = nuevoNodo;
+            }
+            nodoPrevio = nuevoNodo;
+        }
+        if(i == v.size()-1){
+            Nodo* nuevoNodo = new Nodo();
+            nuevoNodo->valor = valor;
+            nuevoNodo->frecuencia = frec;
+            nodoPrevio->sigNodo = nuevoNodo;
         }
     }
-    newLista.push_back(cant);
-    return newLista;
+    return primerNodo;
 };
 
-vector<int> ListaValores(vector<int> v){
-    vector<int> newLista;
-    OrdenarLista(v);
-    int cont=0;
-    int valor=v[cont];
-    while(cont!=v.size()){
-        if(v[cont]==valor){
-            cont++;
-        }else{
-            newLista.push_back(valor);
-            valor=v[cont];
-        }
-    }
-    newLista.push_back(valor);
-    return newLista;
-};
-
-
-vector<Nodo*> ListaNodos(vector<int> v){
-    vector<int> listaF;
-    vector<int> listaV;
-    listaF=ListaFrecuencias(v);
-    listaV=ListaValores(v);
-    cout<<"ListaF: ";MostrarLista(listaF);cout<<endl;
-    cout<<"ListaV: ";MostrarLista(listaV);cout<<endl;
-    vector<Nodo*> listaN;
-    for(int i=0;i<listaV.size();i++){
-        Nodo* newNodo = CrearNodo(listaF[i], listaV[i]);
-        listaN.push_back(newNodo);
-    }
-    return listaN;
-};
-
-void MostrarListaNodos(vector<Nodo*> v){
-    for(int i=0;i<v.size();i++){
-        cout<<v[i]->frecuencia<<":"<<v[i]->valor<<endl;
+void MostrarListaNodos(Nodo* listaN){
+    Nodo* pNodo = listaN;
+    while(pNodo!=NULL){
+        cout << pNodo->frecuencia << ":" << pNodo->valor << endl;
+        pNodo = pNodo->sigNodo;
     }
 };
 
@@ -150,11 +131,13 @@ void Agregar(ArbolBB* tree, Nodo* newItem) {
     }
 };
 
-vector<ArbolBB*> ListaArboles(vector<Nodo*> v){
+vector<ArbolBB*> ListaArboles(Nodo* v){
     vector<ArbolBB*> listaA;
-    for(int i=0;i<v.size();i++){
-        ArbolBB* newArbol = CrearArbol(v[i], NULL, NULL);
+    Nodo* pV = v;
+    while(pV != NULL){
+        ArbolBB* newArbol = CrearArbol(pV, NULL, NULL);
         listaA.push_back(newArbol);
+        pV = pV->sigNodo;
     }
     return listaA;
 };
@@ -206,9 +189,11 @@ int main(){
     val = OrdenarLista(val);
     MostrarLista(val);
     cout<<endl;
-    vector<Nodo*> lF;
+    Nodo* lF;
     lF = ListaNodos(val);
     cout<<endl;
+    cout<<"Lista Frecuencia y Valor"<<endl;MostrarListaNodos(lF);
+    cout << endl;
     vector<ArbolBB*> lA;
     lA = ListaArboles(lF);
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
