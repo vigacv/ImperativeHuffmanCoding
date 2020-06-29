@@ -3,19 +3,19 @@
 #include <vector>
 using namespace std;
 
-struct Raiz{
+struct Nodo{
     int frecuencia;
     int valor;
 };
 
 struct ArbolBB{
-    Raiz* item;
+    Nodo* raiz;
     ArbolBB* subArbolIzq;
     ArbolBB* subArbolDer;
 };
 
-Raiz* CrearRaiz(int f, int v){
-    Raiz* newRaiz = new Raiz();
+Nodo* CrearNodo(int f, int v){
+    Nodo* newRaiz = new Nodo();
     newRaiz->frecuencia=f;
     newRaiz->valor=v;
     return newRaiz;
@@ -79,22 +79,22 @@ vector<int> ListaValores(vector<int> v){
 };
 
 
-vector<Raiz*> ListaNodos(vector<int> v){
+vector<Nodo*> ListaNodos(vector<int> v){
     vector<int> listaF;
     vector<int> listaV;
     listaF=ListaFrecuencias(v);
     listaV=ListaValores(v);
     cout<<"ListaF: ";MostrarLista(listaF);cout<<endl;
     cout<<"ListaV: ";MostrarLista(listaV);cout<<endl;
-    vector<Raiz*> listaN;
+    vector<Nodo*> listaN;
     for(int i=0;i<listaV.size();i++){
-        Raiz* newRaiz = CrearRaiz(listaF[i], listaV[i]);
-        listaN.push_back(newRaiz);
+        Nodo* newNodo = CrearNodo(listaF[i], listaV[i]);
+        listaN.push_back(newNodo);
     }
     return listaN;
 };
 
-void MostrarListaNodos(vector<Raiz*> v){
+void MostrarListaNodos(vector<Nodo*> v){
     for(int i=0;i<v.size();i++){
         cout<<v[i]->frecuencia<<":"<<v[i]->valor<<endl;
     }
@@ -102,25 +102,55 @@ void MostrarListaNodos(vector<Raiz*> v){
 
 //ARBOL
 bool esVacio(ArbolBB* tree){
-    if(tree->item==NULL){
+    if(tree->raiz==NULL){
         return true;
     }
     return false;
 };
 
 void preOrden(ArbolBB* tree){
-    //if (esVacio(ArbolBB* tree->item)!=true){
-      //  cout<<tree->item->frecuencia<<"  ";
-        //if (subArbolIzq != null) {
-          //  preOrden(subArbolIzq);
-        //
-        //if (subArbolDer != null) {
-          //  preOrden(subArbolDer);
-        //}
-    //}
+    if (esVacio(tree)!=true){
+        cout<<tree->raiz->frecuencia<<"  ";
+        if (tree->subArbolIzq!=NULL) {
+            preOrden(tree->subArbolIzq);
+        }
+        if (tree->subArbolDer!=NULL) {
+            preOrden(tree->subArbolDer);
+        }
+    }
 };
 
-Raiz* generarArbolHuffman(Raiz* listaFrecuencias){
+ArbolBB* CrearArbol(Nodo* item, ArbolBB* left, ArbolBB* right){
+    ArbolBB* newArbol = new ArbolBB();
+    newArbol->raiz=item;
+    newArbol->subArbolIzq=left;
+    newArbol->subArbolDer=right;
+    return newArbol;
+};
+
+void Agregar(ArbolBB* tree, Nodo* newItem) {
+    if (esVacio(tree)==true) {
+        tree->raiz = newItem;
+    } else {
+        if (newItem->frecuencia < tree->raiz->frecuencia) {
+            if (tree->subArbolIzq==NULL) {
+                tree->subArbolIzq = CrearArbol(newItem, NULL, NULL);
+            } else {
+                Agregar(tree->subArbolIzq, newItem);
+            }
+        } else if (newItem->frecuencia > tree->raiz->frecuencia) {
+            if (tree->subArbolDer==NULL) {
+                tree->subArbolDer = CrearArbol(newItem, NULL, NULL);
+            } else {
+                Agregar(tree->subArbolDer, newItem);
+            }
+        } else {
+            cout<<"Ya existe el item: "<<newItem;
+        }
+    }
+};
+
+Nodo* generarArbolHuffman(Nodo* listaFrecuencias){
     return NULL;
 };
 
@@ -129,16 +159,26 @@ string codificar(int x){
 };
 
 int decodificar(string x){
-    return NULL;
+    return 0;
 };
 
 int main(){
-    vector<int> val= {1,2,2,1,9,5,5,3,4,7,2,1,2,3};
+    vector<int> val= {1,2,2,1,3,4,2,1,2,3};
     val = OrdenarLista(val);
     MostrarLista(val);
     cout<<endl;
-    vector<Raiz*> lF;
+    vector<Nodo*> lF;
     lF = ListaNodos(val);
     cout<<endl;
     cout<<"Lista Frecuencia y Valor"<<endl;MostrarListaNodos(lF);
+    ArbolBB* pArbol = new ArbolBB();
+    Nodo* n1=CrearNodo(3,1);
+    Nodo* n2=CrearNodo(4,2);
+    Nodo* n3=CrearNodo(2,3);
+    Nodo* n4=CrearNodo(1,4);
+    Agregar(pArbol, n1);
+    Agregar(pArbol, n2);
+    Agregar(pArbol, n3);
+    Agregar(pArbol, n4);
+    cout<<"\nArbol en preOrden: ";preOrden(pArbol);cout<<endl;
 }
