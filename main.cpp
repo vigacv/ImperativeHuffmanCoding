@@ -202,22 +202,35 @@ string encontrarCod(int x, ArbolBB* pArbol, string cod){
     }
 }
 
-string codificar(vector<int> x, ArbolBB* ArbolHuff){
+string codificar(vector<int> x, ArbolBB* arbolHuff){
     string cod = "";
     for(int i=0; i<x.size(); i++){
-        cod += encontrarCod(x[i],ArbolHuff,"");
+        cod += encontrarCod(x[i],arbolHuff,"");
     }
     return cod;
 };
 
-string decodificarCadena(string cod, ArbolBB* ArbolHuff){
-    return NULL;
+string decodificarCadena(string cod, ArbolBB* arbolHuff){
+    string palabra = "";
+    ArbolBB* pArbol = arbolHuff;
+    for(int i=0; i<cod.size(); i++){
+        if(cod[i] == '0'){
+            pArbol = pArbol->subArbolIzq;
+        }else if (cod[i] == '1'){
+            pArbol = pArbol->subArbolDer;
+        }
+        if(pArbol->raiz->valor != 0){
+            palabra += '0' + pArbol->raiz->valor;
+            pArbol = arbolHuff;
+        }
+    }
+    return palabra;
 };
 
 int main(){
     vector<int> val= {1,2,2,1,3,4,2,1,2,3};
     vector<int> val2 = OrdenarLista(val);
-    MostrarLista(val2);
+    MostrarLista(val);
     cout<<endl;
     Nodo* lF;
     lF = ListaNodos(val2);
@@ -232,6 +245,6 @@ int main(){
     cout<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor << endl;
     string valCodificados = codificar(val,ArbolH);
     cout << valCodificados << endl;
-    cout << encontrarCod(4, ArbolH, "") << endl;
+    cout << "Codigo decodificado: " << decodificarCadena(valCodificados, ArbolH) << endl;
     //cout<<"\nArbol en preOrden: ";preOrden(pArbol);cout<<endl;
 }
