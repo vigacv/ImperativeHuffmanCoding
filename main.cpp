@@ -168,29 +168,28 @@ bool estaEnArbol(int x, ArbolBB* arbol){
     }
 }
 
-string encontrarCod(int x, ArbolBB* pArbol, string cod){
+string codificando(int x, ArbolBB* pArbol, string cod){
     if(pArbol->raiz->valor == x){
         return cod;
     }else{
         if(estaEnArbol(x, pArbol->subArbolIzq)){
-            return encontrarCod(x, pArbol->subArbolIzq, (cod+="0"));
+            return codificando(x, pArbol->subArbolIzq,(cod+="0"));
         }else if(estaEnArbol(x, pArbol->subArbolDer)){
-            return encontrarCod(x, pArbol->subArbolDer, (cod+="1"));
+            return codificando(x, pArbol->subArbolDer,(cod+="1"));
+        }else{
+            return "No se encuentra el valor "+to_string(x);
         }
     }
-}
+};
 
-// NO PIDE HACER LA CODIFICACIÓN DEL ARBOL
-/*string codificar(vector<int> x, ArbolBB* arbolHuff){
-    string cod = "";
-    for(int i=0; i<x.size(); i++){
-        cod += encontrarCod(x[i],arbolHuff,"");
+string Codificar(int x, ArbolBB* pArbol){
+    if(x==0){
+        return "No se encuentra el valor 0";
     }
-    return cod;
-};*/
+    return codificando(x, pArbol, "");
+};
 
-string decodificarCadena(string cod, ArbolBB* arbolHuff){
-    string palabra = "";
+string Decodificar(string cod, ArbolBB* arbolHuff){
     ArbolBB* pArbol = arbolHuff;
     for(int i=0; i<cod.size(); i++){
         if(cod[i] == '0'){
@@ -198,12 +197,13 @@ string decodificarCadena(string cod, ArbolBB* arbolHuff){
         }else if (cod[i] == '1'){
             pArbol = pArbol->subArbolDer;
         }
-        if(pArbol->raiz->valor != 0){
-            palabra += '0' + pArbol->raiz->valor;
-            pArbol = arbolHuff;
-        }
     }
-    return palabra;
+    if(pArbol->raiz->valor != 0){
+        return to_string(pArbol->raiz->valor);
+    }else{
+        return "*";
+    }
+
 };
 
 int main(){
@@ -216,6 +216,6 @@ int main(){
     cout<<"---------"<<endl;
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor << endl;
-    cout<<"Codificar 4 --> "<<encontrarCod(4,ArbolH,"")<<endl;
-    cout << "Decodificar 110 --> "<< decodificarCadena("110", ArbolH) << endl;
+    cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
+    cout<<"Decodificar 110 --> "<< Decodificar("110", ArbolH) << endl;
 }
