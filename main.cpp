@@ -217,5 +217,5 @@ int main(){
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor << endl;
     cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
-    cout<<"Decodificar 110 --> "<< Decodificar("110", ArbolH) << endl;
+    cout<<"Decodificar 110 --> "<< Decodificar("1110", ArbolH) << endl;
 }
