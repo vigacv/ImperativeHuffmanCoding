@@ -10,7 +10,8 @@ struct Nodo{
 };
 
 struct ArbolBB{
-    Nodo* raiz;
+    int frecuencia;
+    int valor;
     ArbolBB* subArbolIzq;
     ArbolBB* subArbolDer;
 };
@@ -84,7 +85,7 @@ void MostrarListaNodos(Nodo* listaN){
 
 //ARBOL
 bool esVacio(ArbolBB* tree){
-    if(tree->raiz==NULL){
+    if(tree==NULL){
         return true;
     }
     return false;
@@ -92,7 +93,7 @@ bool esVacio(ArbolBB* tree){
 
 void preOrden(ArbolBB* tree){
     if (esVacio(tree)!=true){
-        cout<<tree->raiz->frecuencia<<"  ";
+        cout<<tree->frecuencia<<"  ";
         if (tree->subArbolIzq!=NULL) {
             preOrden(tree->subArbolIzq);
         }
@@ -102,9 +103,10 @@ void preOrden(ArbolBB* tree){
     }
 };
 
-ArbolBB* CrearArbol(Nodo* item, ArbolBB* left, ArbolBB* right){
+ArbolBB* CrearArbol(int frec, int val, ArbolBB* left, ArbolBB* right){
     ArbolBB* newArbol = new ArbolBB();
-    newArbol->raiz=item;
+    newArbol->frecuencia = frec;
+    newArbol->valor = val;
     newArbol->subArbolIzq=left;
     newArbol->subArbolDer=right;
     return newArbol;
@@ -114,7 +116,7 @@ vector<ArbolBB*> ListaArboles(Nodo* v){
     vector<ArbolBB*> listaA;
     Nodo* pV = v;
     while(pV != NULL){
-        ArbolBB* newArbol = CrearArbol(pV, NULL, NULL);
+        ArbolBB* newArbol = CrearArbol(pV->frecuencia,pV->valor, NULL, NULL);
         listaA.push_back(newArbol);
         pV = pV->sigNodo;
     }
@@ -123,14 +125,14 @@ vector<ArbolBB*> ListaArboles(Nodo* v){
 
 void MostrarListaArboles(vector<ArbolBB*> v){
     for(int i=0;i<v.size();i++){
-        cout<<v[i]->raiz->frecuencia<<":"<<v[i]->raiz->valor<<endl;
+        cout<<v[i]->frecuencia<<":"<<v[i]->valor<<endl;
     }
 };
 
 vector<ArbolBB*> OrdenarListaArbol(vector<ArbolBB*> v){
     for(int i=0;i<v.size()-1;i++){
         for(int j=i+1;j<v.size();j++){
-            if(v[i]->raiz->frecuencia > v[j]->raiz->frecuencia){
+            if(v[i]->frecuencia > v[j]->frecuencia){
                 ArbolBB* temp=v[i];
                 v[i]=v[j];
                 v[j]=temp;
@@ -146,8 +148,8 @@ ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
     }else{
         while(v.size()!=1){
             v=OrdenarListaArbol(v);
-            int suma= (v[0]->raiz->frecuencia)+(v[1]->raiz->frecuencia);
-            ArbolBB* newArbol=CrearArbol(CrearNodo(suma, 0), v[0], v[1]);
+            int suma= (v[0]->frecuencia)+(v[1]->frecuencia);
+            ArbolBB* newArbol=CrearArbol(suma,0, v[0], v[1]);
             v.erase(v.begin(),v.begin()+2);
             v.push_back(newArbol);
         }
@@ -160,7 +162,7 @@ bool estaEnArbol(int x, ArbolBB* arbol){
     if(arbol == NULL){
         return false;
     }else{
-        if(arbol->raiz->valor == x){
+        if(arbol->valor == x){
             return true;
         }else{
             return estaEnArbol(x,arbol->subArbolIzq) || estaEnArbol(x,arbol->subArbolDer);
@@ -169,7 +171,7 @@ bool estaEnArbol(int x, ArbolBB* arbol){
 }
 
 string codificando(int x, ArbolBB* pArbol, string cod){
-    if(pArbol->raiz->valor == x){
+    if(pArbol->valor == x){
         return cod;
     }else{
         if(estaEnArbol(x, pArbol->subArbolIzq)){
@@ -198,8 +200,8 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
             pArbol = pArbol->subArbolDer;
         }
     }
-    if(pArbol->raiz->valor != 0){
-        return to_string(pArbol->raiz->valor);
+    if(pArbol->valor != 0){
+        return to_string(pArbol->valor);
     }else{
         return "*";
     }
@@ -215,7 +217,7 @@ int main(){
     cout<<"Lista Arbol"<<endl; MostrarListaArboles(lA);
     cout<<"---------"<<endl;
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
-    cout<<"Raiz final = "<<ArbolH->raiz->frecuencia<<":"<<ArbolH->raiz->valor << endl;
+    cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
     cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
     cout<<"Decodificar 110 --> "<< Decodificar("110", ArbolH) << endl;
 }
