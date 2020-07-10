@@ -33,7 +33,7 @@ void MostrarLista(vector<int> v){
     for(int i=0;i<v.size()-1;i++){
         cout<<v[i]<<", ";
     }
-    cout<<v[v.size()]<<" ";
+    cout<<v[v.size()-1]<<" ";
 };
 
 vector<int> OrdenarLista(vector<int> v){
