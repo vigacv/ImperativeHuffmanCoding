@@ -1,7 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <time.h>
+#include <ctime>
 using namespace std;
+unsigned t0, t1;
+
+
 
 struct Nodo{
     int frecuencia;
@@ -25,9 +30,10 @@ Nodo* CrearNodo(int f, int v){
 
 //LISTAS
 void MostrarLista(vector<int> v){
-    for(int i=0;i<v.size();i++){
-        cout<<v[i]<<" ";
+    for(int i=0;i<v.size()-1;i++){
+        cout<<v[i]<<", ";
     }
+    cout<<v[v.size()]<<" ";
 };
 
 vector<int> OrdenarLista(vector<int> v){
@@ -208,8 +214,20 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
 
 };
 
+vector<int> GenerarLista(){
+    vector<int> newLista = vector<int>();
+    srand(time(NULL)); //para reiniciar el rand
+    int tam = rand() % 31 +90; // %31+90 = [90-120]
+    cout<<"Tamano lista: "<<tam<<endl;
+    for(int i=0;i<tam;i++){
+        newLista.push_back(rand() % 9+1); // [1-9]
+    }
+    return newLista;
+}
 int main(){
-    vector<int> val= {1,2,2,1,3,4,2,1,2,3};
+    t0=clock();
+    //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
+    vector<int> val = GenerarLista();
     cout<<"Lista inicial: [ "; MostrarLista(val);
     cout<<"]"<<endl<<endl;
     Nodo* lF;   lF = ListaNodos(val);
@@ -219,5 +237,9 @@ int main(){
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
     cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
-    cout<<"Decodificar 110 --> "<< Decodificar("1110", ArbolH) << endl;
+    cout<<"Decodificar 110 --> "<< Decodificar("110", ArbolH) << endl;
+    t1 = clock();
+    cout<<"\n";
+    double time = (double(t1-t0)/CLOCKS_PER_SEC);
+    cout << "Execution Time: " << time << endl;
 }
