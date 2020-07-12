@@ -229,23 +229,13 @@ int main(){
 
     //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
     vector<int> val = GenerarLista();
-    cout<<"Lista inicial: [ "; MostrarLista(val);
-    cout<<"]"<<endl<<endl;
     Nodo* lF;   lF = ListaNodos(val);
     vector<ArbolBB*> lA;    lA = ListaArboles(lF);
-    cout<<"Lista Arbol"<<endl; MostrarListaArboles(lA);
-    cout<<"---------"<<endl;
-    cout<<"\n*(t)Empieza tiempo de procesamiento\n"<<endl;
     t0=clock();
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
     t1 = clock();
-    cout<<"\n*(t)Termina tiempo de procesamiento\n"<<endl;
-    cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
-    cout<<"Decodificar 110 --> "<< Decodificar("0", ArbolH) << endl; //Validar error
-    cout<<"\n";
     double time = (double(t1-t0)/CLOCKS_PER_SEC);
-    cout << "Execution Time: " << time <<" sec"<<endl;
     time=time*1000;
     cout << "Execution Time: " << time <<" ms"<<endl;
 }
