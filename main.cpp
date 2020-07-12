@@ -7,7 +7,6 @@ using namespace std;
 unsigned t0, t1;
 
 
-
 struct Nodo{
     int frecuencia;
     int valor;
@@ -155,7 +154,7 @@ ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
         while(v.size()!=1){
             v=OrdenarListaArbol(v);
             int suma= (v[0]->frecuencia)+(v[1]->frecuencia);
-            ArbolBB* newArbol=CrearArbol(suma,0, v[0], v[1]);
+            ArbolBB* newArbol=CrearArbol(suma,-1, v[0], v[1]); //-1 es *
             v.erase(v.begin(),v.begin()+2);
             v.push_back(newArbol);
         }
@@ -206,7 +205,7 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
             pArbol = pArbol->subArbolDer;
         }
     }
-    if(pArbol->valor != 0){
+    if(pArbol->valor != -1){
         return to_string(pArbol->valor);
     }else{
         return "*";
@@ -217,15 +216,17 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
 vector<int> GenerarLista(){
     vector<int> newLista = vector<int>();
     srand(time(NULL)); //para reiniciar el rand
-    int tam = rand() % 31 +90; // %31+90 = [90-120]
+    //int tam = rand() % 1000 +5000; // %31+90 = [90-120]
+    int tam=10; //para Tam 10/50/100/200/500/700/1000 fijos
     cout<<"Tamano lista: "<<tam<<endl;
     for(int i=0;i<tam;i++){
-        newLista.push_back(rand() % 9+1); // [1-9]
+        newLista.push_back(rand() % 127+0); // [0-127]
     }
     return newLista;
-}
+};
+
 int main(){
-    t0=clock();
+
     //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
     vector<int> val = GenerarLista();
     cout<<"Lista inicial: [ "; MostrarLista(val);
@@ -234,12 +235,17 @@ int main(){
     vector<ArbolBB*> lA;    lA = ListaArboles(lF);
     cout<<"Lista Arbol"<<endl; MostrarListaArboles(lA);
     cout<<"---------"<<endl;
+    cout<<"\n*(t)Empieza tiempo de procesamiento\n"<<endl;
+    t0=clock();
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
-    cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
-    cout<<"Decodificar 110 --> "<< Decodificar("110", ArbolH) << endl;
     t1 = clock();
+    cout<<"\n*(t)Termina tiempo de procesamiento\n"<<endl;
+    cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
+    cout<<"Decodificar 110 --> "<< Decodificar("0", ArbolH) << endl; //Validar error
     cout<<"\n";
     double time = (double(t1-t0)/CLOCKS_PER_SEC);
+    cout << "Execution Time: " << time << endl;
+    time=time*1000;
     cout << "Execution Time: " << time << endl;
 }
