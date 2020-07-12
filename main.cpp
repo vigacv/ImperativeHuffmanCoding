@@ -213,11 +213,11 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
 
 };
 
-vector<int> GenerarLista(){
+vector<int> GenerarLista(int tam){
     vector<int> newLista = vector<int>();
     srand(time(NULL)); //para reiniciar el rand
     //int tam = rand() % 1000 +5000; // %31+90 = [90-120]
-    int tam=10; //para Tam 10/50/100/200/500/700/1000 fijos
+    //para Tam 10/50/100/200/500/700/1000 fijos
     cout<<"Tamano lista: "<<tam<<endl;
     for(int i=0;i<tam;i++){
         newLista.push_back(rand() % 127+0); // [0-127]
@@ -228,14 +228,23 @@ vector<int> GenerarLista(){
 int main(){
 
     //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
-    vector<int> val = GenerarLista();
-    Nodo* lF;   lF = ListaNodos(val);
-    vector<ArbolBB*> lA;    lA = ListaArboles(lF);
-    t0=clock();
-    ArbolBB* ArbolH=GenerarArbolHuffman(lA);
-    cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
-    t1 = clock();
-    double time = (double(t1-t0)/CLOCKS_PER_SEC);
-    time=time*1000;
-    cout << "Execution Time: " << time <<" ms"<<endl;
+    int tam, reps;
+    cout << "Tamaño de la entrada: " << endl;
+    cin >> tam;
+    cout << "Numero de repeticiones: " << endl;
+    cin >> reps;
+    for(int i=0; i<reps; i++){
+        vector<int> val = GenerarLista(tam);
+        Nodo* lF;   lF = ListaNodos(val);
+        vector<ArbolBB*> lA;    lA = ListaArboles(lF);
+        t0=clock();
+        ArbolBB* ArbolH=GenerarArbolHuffman(lA);
+        cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
+        t1 = clock();
+        double time = (double(t1-t0)/CLOCKS_PER_SEC);
+        time=time*1000;
+        cout << "Execution Time: " << time <<" ms"<<endl;
+        cout << endl;
+    }
+
 }
