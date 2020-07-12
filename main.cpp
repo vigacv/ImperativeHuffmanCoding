@@ -245,7 +245,7 @@ int main(){
     cout<<"Decodificar 110 --> "<< Decodificar("0", ArbolH) << endl; //Validar error
     cout<<"\n";
     double time = (double(t1-t0)/CLOCKS_PER_SEC);
-    cout << "Execution Time: " << time << endl;
+    cout << "Execution Time: " << time <<" sec"<<endl;
     time=time*1000;
-    cout << "Execution Time: " << time << endl;
+    cout << "Execution Time: " << time <<" ms"<<endl;
 }
