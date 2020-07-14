@@ -190,25 +190,40 @@ string codificando(int x, ArbolBB* pArbol, string cod){
 };
 
 string Codificar(int x, ArbolBB* pArbol){
-    if(x==0){
-        return "No se encuentra el valor 0";
+    if(x>=0){
+        return codificando(x, pArbol, "");
     }
-    return codificando(x, pArbol, "");
+    return "No se encuentra el valor "+to_string(x);
 };
 
 string Decodificar(string cod, ArbolBB* arbolHuff){
     ArbolBB* pArbol = arbolHuff;
+    bool v = false;
     for(int i=0; i<cod.size(); i++){
         if(cod[i] == '0'){
-            pArbol = pArbol->subArbolIzq;
+            if(pArbol->subArbolIzq!=NULL){
+                pArbol = pArbol->subArbolIzq;
+            }else{
+                v = true;
+                break;
+            }
         }else if (cod[i] == '1'){
-            pArbol = pArbol->subArbolDer;
+            if(pArbol->subArbolDer!=NULL){
+                pArbol = pArbol->subArbolDer;
+            }else{
+                v = true;
+                break;
+            }
         }
     }
-    if(pArbol->valor != -1){
-        return to_string(pArbol->valor);
+    if(v == true){
+        cout<<"No se puede decodificar"<<endl;
     }else{
-        return "*";
+        if(pArbol->valor != -1){
+            return to_string(pArbol->valor);
+        }else{
+            return "*";
+        }
     }
 
 };
@@ -227,8 +242,8 @@ vector<int> GenerarLista(){
 
 int main(){
 
-    //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
-    vector<int> val = GenerarLista();
+    vector<int> val= {1,2,2,1,3,4,2,1,2,3};
+    //vector<int> val = GenerarLista();
     cout<<"Lista inicial: [ "; MostrarLista(val);
     cout<<"]"<<endl<<endl;
     Nodo* lF;   lF = ListaNodos(val);
@@ -236,16 +251,19 @@ int main(){
     cout<<"Lista Arbol"<<endl; MostrarListaArboles(lA);
     cout<<"---------"<<endl;
     cout<<"\n*(t)Empieza tiempo de procesamiento\n"<<endl;
-    t0=clock();
+    //t0=clock();
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
-    t1 = clock();
+    //t1 = clock();
     cout<<"\n*(t)Termina tiempo de procesamiento\n"<<endl;
-    cout<<"Codificar 4 --> "<<Codificar(4,ArbolH)<<endl;
-    cout<<"Decodificar 110 --> "<< Decodificar("0", ArbolH) << endl; //Validar error
+    int valor; string cod;
+    cout<<"\nCodificar: "; cin>>valor;
+    cout<<"* "<<valor<<" codificado --> "<<Codificar(valor,ArbolH)<<endl;
+    cout<<"\nDecodificar: ";cin>>cod; //Validar error
+    cout<<"* '"<<cod<<"' decodificado --> "<<Decodificar(cod, ArbolH)<<endl;
     cout<<"\n";
-    double time = (double(t1-t0)/CLOCKS_PER_SEC);
-    cout << "Execution Time: " << time <<" sec"<<endl;
-    time=time*1000;
-    cout << "Execution Time: " << time <<" ms"<<endl;
+    //double time = (double(t1-t0)/CLOCKS_PER_SEC);
+    //cout << "Execution Time: " << time <<" sec"<<endl;
+    //time=time*1000;
+    //cout << "Execution Time: " << time <<" ms"<<endl;
 }
