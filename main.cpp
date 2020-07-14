@@ -1,10 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <ctime>
 using namespace std;
-unsigned t0, t1;
-
 
 struct Nodo{
     int frecuencia;
@@ -51,62 +47,31 @@ Nodo* ListaNodos(vector<int> v){
     v = OrdenarLista(v);
     int frec = 0;
     int valor = v[0];
-    Nodo* nodoPrevio = NULL;
+    Nodo* nodoTemp = NULL;
     Nodo* primerNodo = new Nodo();
     for(int i=0; i<v.size(); i++){
         if(v[i]==valor){
             frec++;
         }else{
-            Nodo* nuevoNodo = new Nodo();
-            nuevoNodo->valor = valor;
-            nuevoNodo->frecuencia = frec;
-            valor = v[i];
-            frec = 1;
-            if(nodoPrevio != NULL){
-                nodoPrevio->sigNodo = nuevoNodo;
+            Nodo* nuevoNodo = CrearNodo(valor, frec);
+            valor = v[i]; //se asigna el siguiente valor a contar
+            frec = 1; //se reinicia la frecuencia
+            if(nodoTemp != NULL){
+                nodoTemp->sigNodo = nuevoNodo;
             }else{
                 primerNodo = nuevoNodo;
             }
-            nodoPrevio = nuevoNodo;
+            nodoTemp = nuevoNodo;
         }
         if(i == v.size()-1){
-            Nodo* nuevoNodo = new Nodo();
-            nuevoNodo->valor = valor;
-            nuevoNodo->frecuencia = frec;
-            nodoPrevio->sigNodo = nuevoNodo;
+            Nodo* nuevoNodo = CrearNodo(valor, frec);
+            nodoTemp->sigNodo = nuevoNodo;
         }
     }
     return primerNodo;
 };
 
-void MostrarListaNodos(Nodo* listaN){
-    Nodo* pNodo = listaN;
-    while(pNodo!=NULL){
-        cout << pNodo->frecuencia << ":" << pNodo->valor << endl;
-        pNodo = pNodo->sigNodo;
-    }
-};
-
 //ARBOL
-bool esVacio(ArbolBB* tree){
-    if(tree==NULL){
-        return true;
-    }
-    return false;
-};
-
-void preOrden(ArbolBB* tree){
-    if (esVacio(tree)!=true){
-        cout<<tree->frecuencia<<"  ";
-        if (tree->subArbolIzq!=NULL) {
-            preOrden(tree->subArbolIzq);
-        }
-        if (tree->subArbolDer!=NULL) {
-            preOrden(tree->subArbolDer);
-        }
-    }
-};
-
 ArbolBB* CrearArbol(int frec, int val, ArbolBB* left, ArbolBB* right){
     ArbolBB* newArbol = new ArbolBB();
     newArbol->frecuencia = frec;
@@ -146,6 +111,7 @@ vector<ArbolBB*> OrdenarListaArbol(vector<ArbolBB*> v){
     return v;
 };
 
+//ARBOL HUFFMAN
 ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
     if(v.empty()){
         return NULL;
@@ -161,7 +127,6 @@ ArbolBB* GenerarArbolHuffman(vector<ArbolBB*> v){
     }
 };
 
-
 bool estaEnArbol(int x, ArbolBB* arbol){
     if(arbol == NULL){
         return false;
@@ -174,6 +139,7 @@ bool estaEnArbol(int x, ArbolBB* arbol){
     }
 }
 
+//CODIFICAR
 string codificando(int x, ArbolBB* pArbol, string cod){
     if(pArbol->valor == x){
         return cod;
@@ -192,9 +158,10 @@ string Codificar(int x, ArbolBB* pArbol){
     if(x>=0){
         return codificando(x, pArbol, "");
     }
-    return "No se encuentra el valor "+to_string(x);
+    return "No se puede encontrar valores negativos";
 };
 
+//DECODIFICAR
 string Decodificar(string cod, ArbolBB* arbolHuff){
     ArbolBB* pArbol = arbolHuff;
     bool v = false;
@@ -220,40 +187,24 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
     if(v == true){
         return "No se puede decodificar";
     }else{
-        if(pArbol->valor !=-1){
+        if(pArbol->valor!=-1){
             return to_string(pArbol->valor);
         }else{
-            return "*";
+            return "No es un codigo prefijo";
         }
     }
 };
 
-vector<int> GenerarLista(){
-    vector<int> newLista = vector<int>();
-    srand(time(NULL)); //para reiniciar el rand
-    //int tam = rand() % 1000 +5000; // %31+90 = [90-120]
-    int tam=1000; //para Tam 10/50/100/200/500/700/1000 fijos
-    cout<<"Tamano lista: "<<tam<<endl;
-    for(int i=0;i<tam;i++){
-        newLista.push_back(rand() % 127+0); // [0-127]
-    }
-    return newLista;
-};
-
+//MAIN
 int main(){
-
     vector<int> val= {1,2,2,1,3,4,2,1,2,3};
-    //vector<int> val = GenerarLista();
-    cout<<"Lista inicial: [ "; MostrarLista(val);
-    cout<<"]"<<endl<<endl;
+    cout<<"Lista inicial: [ "; MostrarLista(val); cout<<"]\n"<<endl;
     Nodo* lF;   lF = ListaNodos(val);
-    vector<ArbolBB*> lA;    lA = ListaArboles(lF);
-    cout<<"Lista Arbol"<<endl; MostrarListaArboles(lA);
+    vector<ArbolBB*> lA; lA = ListaArboles(lF);
+    cout<<"Lista Arbol\nf v\n---"<<endl; MostrarListaArboles(lA);
     cout<<"---------"<<endl;
-    cout<<"\n*(t)Empieza tiempo de procesamiento\n"<<endl;
     ArbolBB* ArbolH=GenerarArbolHuffman(lA);
     cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
-    cout<<"\n*(t)Termina tiempo de procesamiento\n"<<endl;
     int valor; string cod;
     cout<<"\nCodificar: ";
     while( ( cin>>valor ).fail() ) { //comprobamos los flags de error con la referencia que devuelve el operador
@@ -262,7 +213,7 @@ int main(){
         cout<<"Debe ingresar solo numeros: ";
     }
     cin.clear(); //reseteamos los flags
-        fflush(stdin); //limpio buffer de entrada
+    fflush(stdin); //limpio buffer de entrada
     cout<<"\n* "<<valor<<" codificado --> "<<Codificar(valor,ArbolH)<<endl;
     cout<<"\nDecodificar: ";
     cin>>cod;
