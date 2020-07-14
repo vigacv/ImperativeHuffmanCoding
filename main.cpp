@@ -218,7 +218,7 @@ vector<int> GenerarLista(int tam){
     srand(time(NULL)); //para reiniciar el rand
     //int tam = rand() % 1000 +5000; // %31+90 = [90-120]
     //para Tam 10/50/100/200/500/700/1000 fijos
-    cout<<"Tamano lista: "<<tam<<endl;
+    //cout<<"Tamano lista: "<<tam<<endl;
     for(int i=0;i<tam;i++){
         newLista.push_back(rand() % 127+0); // [0-127]
     }
@@ -231,20 +231,28 @@ int main(){
     int tam, reps;
     cout << "Tamaño de la entrada: " << endl;
     cin >> tam;
-    cout << "Numero de repeticiones: " << endl;
-    cin >> reps;
+    //cout << "Numero de repeticiones: " << endl;
+    reps=1000;
+    int timeTotal=0;
     for(int i=0; i<reps; i++){
         vector<int> val = GenerarLista(tam);
+
+        t0=clock();
+
         Nodo* lF;   lF = ListaNodos(val);
         vector<ArbolBB*> lA;    lA = ListaArboles(lF);
-        t0=clock();
         ArbolBB* ArbolH=GenerarArbolHuffman(lA);
-        cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
+        //cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
+
         t1 = clock();
-        double time = (double(t1-t0)/CLOCKS_PER_SEC);
-        time=time*1000;
-        cout << "Execution Time: " << time <<" ms"<<endl;
-        cout << endl;
+
+        double time = (double(t1-t0)/CLOCKS_PER_SEC); //mide en segundos
+        time=time*1000; //transforma a ms
+        timeTotal+=time; //acumula
+        //cout << "Execution Time: " << time <<" ms"<<endl;
+        //cout << endl;
     }
+    int timeProm = timeTotal/reps;
+    cout<<"Tiempo promedio: "<<timeProm<<" ms"<<endl;
 
 }
