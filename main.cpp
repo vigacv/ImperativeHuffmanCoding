@@ -58,9 +58,7 @@ Nodo* ListaNodos(vector<int> v){
         if(v[i]==valor){
             frec++;
         }else{
-            Nodo* nuevoNodo = new Nodo();
-            nuevoNodo->valor = valor;
-            nuevoNodo->frecuencia = frec;
+            Nodo* nuevoNodo = CrearNodo(valor, frec);
             valor = v[i];
             frec = 1;
             if(nodoPrevio != NULL){
@@ -71,43 +69,14 @@ Nodo* ListaNodos(vector<int> v){
             nodoPrevio = nuevoNodo;
         }
         if(i == v.size()-1){
-            Nodo* nuevoNodo = new Nodo();
-            nuevoNodo->valor = valor;
-            nuevoNodo->frecuencia = frec;
+            Nodo* nuevoNodo = CrearNodo(valor, frec);
             nodoPrevio->sigNodo = nuevoNodo;
         }
     }
     return primerNodo;
 };
 
-void MostrarListaNodos(Nodo* listaN){
-    Nodo* pNodo = listaN;
-    while(pNodo!=NULL){
-        cout << pNodo->frecuencia << ":" << pNodo->valor << endl;
-        pNodo = pNodo->sigNodo;
-    }
-};
-
 //ARBOL
-bool esVacio(ArbolBB* tree){
-    if(tree==NULL){
-        return true;
-    }
-    return false;
-};
-
-void preOrden(ArbolBB* tree){
-    if (esVacio(tree)!=true){
-        cout<<tree->frecuencia<<"  ";
-        if (tree->subArbolIzq!=NULL) {
-            preOrden(tree->subArbolIzq);
-        }
-        if (tree->subArbolDer!=NULL) {
-            preOrden(tree->subArbolDer);
-        }
-    }
-};
-
 ArbolBB* CrearArbol(int frec, int val, ArbolBB* left, ArbolBB* right){
     ArbolBB* newArbol = new ArbolBB();
     newArbol->frecuencia = frec;
@@ -216,9 +185,6 @@ string Decodificar(string cod, ArbolBB* arbolHuff){
 vector<int> GenerarLista(int tam){
     vector<int> newLista = vector<int>();
     srand(time(NULL)); //para reiniciar el rand
-    //int tam = rand() % 1000 +5000; // %31+90 = [90-120]
-    //para Tam 10/50/100/200/500/700/1000 fijos
-    //cout<<"Tamano lista: "<<tam<<endl;
     for(int i=0;i<tam;i++){
         newLista.push_back(rand() % 127+0); // [0-127]
     }
@@ -226,33 +192,29 @@ vector<int> GenerarLista(int tam){
 };
 
 int main(){
+    int tam=-1, reps;
+    while(tam!=0){
+        cout << "Tamano de la entrada: " << endl;
+        cin >> tam;
+        reps=1000;
+        int timeTotal=0;
+        for(int i=0; i<reps; i++){
+            vector<int> val = GenerarLista(tam);
+            t0=clock();
 
-    //vector<int> val= {1,2,2,1,3,4,2,1,2,3};
-    int tam, reps;
-    cout << "Tamaño de la entrada: " << endl;
-    cin >> tam;
-    //cout << "Numero de repeticiones: " << endl;
-    reps=1000;
-    int timeTotal=0;
-    for(int i=0; i<reps; i++){
-        vector<int> val = GenerarLista(tam);
+            Nodo* lF;   lF = ListaNodos(val);
+            vector<ArbolBB*> lA;    lA = ListaArboles(lF);
+            ArbolBB* ArbolH=GenerarArbolHuffman(lA);
 
-        t0=clock();
-
-        Nodo* lF;   lF = ListaNodos(val);
-        vector<ArbolBB*> lA;    lA = ListaArboles(lF);
-        ArbolBB* ArbolH=GenerarArbolHuffman(lA);
-        //cout<<"Raiz final = "<<ArbolH->frecuencia<<":"<<ArbolH->valor << endl;
-
-        t1 = clock();
-
-        double time = (double(t1-t0)/CLOCKS_PER_SEC); //mide en segundos
-        time=time*1000; //transforma a ms
-        timeTotal+=time; //acumula
-        //cout << "Execution Time: " << time <<" ms"<<endl;
-        //cout << endl;
+            t1 = clock();
+            double time = (double(t1-t0)/CLOCKS_PER_SEC); //mide en segundos
+            time=time*1000; //transforma a ms
+            timeTotal+=time; //acumula
+            //cout << "Execution Time: " << time <<" ms"<<endl;
+            //cout << endl;
+        }
+        int timeProm = timeTotal/reps;
+        cout<<tam<<" - Tiempo promedio: "<<timeProm<<" ms"<<endl;
     }
-    int timeProm = timeTotal/reps;
-    cout<<"Tiempo promedio: "<<timeProm<<" ms"<<endl;
 
 }
