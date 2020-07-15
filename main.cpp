@@ -196,7 +196,7 @@ int main(){
     while(tam!=0){
         cout << "Tamano de la entrada: " << endl;
         cin >> tam;
-        reps=1000;
+        reps=5;
         int timeTotal=0;
         for(int i=0; i<reps; i++){
             vector<int> val = GenerarLista(tam);
@@ -210,11 +210,11 @@ int main(){
             double time = (double(t1-t0)/CLOCKS_PER_SEC); //mide en segundos
             time=time*1000; //transforma a ms
             timeTotal+=time; //acumula
-            //cout << "Execution Time: " << time <<" ms"<<endl;
-            //cout << endl;
+            cout << "Execution Time: " << time <<" ms"<<endl;
+            cout << endl;
         }
         int timeProm = timeTotal/reps;
-        cout<<tam<<" - Tiempo promedio: "<<timeProm<<" ms"<<endl;
+        cout<<"*Tiempo promedio: "<<timeProm<<" ms"<<endl;
     }
 
 }
